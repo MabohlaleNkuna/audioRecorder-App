@@ -7,7 +7,7 @@ export default function App() {
   const [recording, setRecording] = React.useState();
   const [recordings, setRecordings] = React.useState([]);
   const [searchTerm, setSearchTerm] = React.useState('');
-  const [recordingTime, setRecordingTime] = React.useState(0); // Store the recording time
+  const [recordingTime, setRecordingTime] = React.useState(0); 
 
   React.useEffect(() => {
     const loadRecordingsFromStorage = async () => {
@@ -156,7 +156,7 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'transparent', // Transparent background for the entire screen
+    backgroundColor: 'transparent', 
     alignItems: 'center',
     justifyContent: 'flex-start',
     padding: 20,
