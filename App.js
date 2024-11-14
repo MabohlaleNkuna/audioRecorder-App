@@ -7,7 +7,7 @@ export default function App() {
   const [recording, setRecording] = React.useState();
   const [recordings, setRecordings] = React.useState([]);
   const [searchTerm, setSearchTerm] = React.useState('');
-  const [recordingTime, setRecordingTime] = React.useState(0); 
+  const [recordingTime, setRecordingTime] = React.useState(0);
 
   React.useEffect(() => {
     const loadRecordingsFromStorage = async () => {
@@ -26,15 +26,13 @@ export default function App() {
   React.useEffect(() => {
     let timer;
     if (recording) {
-      // Start a timer 
       timer = setInterval(() => {
         setRecordingTime((prevTime) => prevTime + 1);
       }, 1000);
     } else {
-  
       clearInterval(timer);
     }
-    return () => clearInterval(timer); 
+    return () => clearInterval(timer);
   }, [recording]);
 
   async function startRecording() {
@@ -57,17 +55,14 @@ export default function App() {
     }
   }
 
-  // Stop recording
   async function stopRecording() {
     setRecording(undefined);
-    setRecordingTime(0); 
+    setRecordingTime(0);
 
     await recording.stopAndUnloadAsync();
     const { sound, status } = await recording.createNewLoadedSoundAsync();
-
     const fileUri = recording.getURI();
 
-    // Save recording details
     let allRecordings = [...recordings];
     allRecordings.push({
       sound: sound,
@@ -77,27 +72,30 @@ export default function App() {
     });
 
     setRecordings(allRecordings);
-
     await AsyncStorage.setItem('recordings', JSON.stringify(allRecordings));
   }
 
-  function getDurationFormatted(milliseconds) {
-    const minutes = Math.floor(milliseconds / 1000 / 60);
-    const seconds = Math.round((milliseconds / 1000) % 60);
-    return `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+  function getDurationFormatted(seconds) {
+    const hrs = Math.floor(seconds / 3600);
+    const mins = Math.floor((seconds % 3600) / 60);
+    const secs = seconds % 60;
+  
+    const hrsDisplay = hrs > 0 ? `${hrs}:` : "";
+    const minsDisplay = `${hrs > 0 && mins < 10 ? '0' : ''}${mins}:`;
+    const secsDisplay = `${secs < 10 ? '0' : ''}${secs}`;
+  
+    return `${hrsDisplay}${minsDisplay}${secsDisplay}`;
   }
+  
 
-  // Play the audio
   async function playRecording(sound) {
     await sound.replayAsync();
   }
 
-  // Delete
   async function deleteRecording(index) {
     const updatedRecordings = [...recordings];
     updatedRecordings.splice(index, 1);
     setRecordings(updatedRecordings);
-
     await AsyncStorage.setItem('recordings', JSON.stringify(updatedRecordings));
   }
 
@@ -105,26 +103,29 @@ export default function App() {
     return (
       <View style={styles.row}>
         <Text style={styles.fill}>
-          Recording #{index + 1} | {item.duration} | {item.date}
+          Recording #{String(index + 1).padStart(3, '0')} | {item.duration} | {item.date}
         </Text>
-        <Button title="Play" onPress={() => playRecording(item.sound)} />
-        <Button title="Delete" onPress={() => deleteRecording(index)} />
+        <View style={styles.buttonContainer}>
+          <Button title="Play" onPress={() => playRecording(item.sound)} />
+          <View style={{ width: 3 }} />
+          <Button title="Delete" onPress={() => deleteRecording(index)} />
+        </View>
       </View>
     );
   }
 
-  // Filter recordings based on search term
-  const filteredRecordings = recordings.filter(recording =>
-    recording.date.includes(searchTerm) || recording.file.includes(searchTerm)
+  const filteredRecordings = recordings.filter((recording, index) =>
+    String(index + 1).padStart(3, '0').includes(searchTerm) || recording.date.includes(searchTerm)
   );
 
   return (
     <View style={styles.container}>
       <StatusBar barStyle="light-content" backgroundColor="#004AAD" />
+      <Text style={styles.header}>Recording App</Text>
 
       <TextInput
         style={styles.searchInput}
-        placeholder="Search recordings..."
+        placeholder="Search recordings by number..."
         onChangeText={setSearchTerm}
         value={searchTerm}
       />
@@ -137,9 +138,9 @@ export default function App() {
       </TouchableOpacity>
 
       {recording && (
-        <View style={styles.recordingIndicator}>
-          <Text style={styles.recordingTime}>{recordingTime}s</Text>
-        </View>
+      <View style={styles.recordingIndicator}>
+        <Text style={styles.recordingTime}>{getDurationFormatted(recordingTime)}</Text>
+      </View>
       )}
 
       <Text style={styles.recordingCount}>Recording Count: {recordings.length}</Text>
@@ -156,12 +157,20 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'transparent', 
+    backgroundColor: '#F4F4F9',
     alignItems: 'center',
     justifyContent: 'flex-start',
     padding: 20,
     marginTop: 0,
     height: '100%',
+  },
+  header: {
+    fontSize: 28,
+    fontWeight: 'bold',
+    color: '#004AAD',
+    marginBottom: 20,
+    marginTop: 40,
+    fontFamily: 'sans-serif',
   },
   searchInput: {
     height: 45,
@@ -170,7 +179,6 @@ const styles = StyleSheet.create({
     borderWidth: 1.5,
     paddingHorizontal: 10,
     marginBottom: 20,
-    marginTop: 40,
     borderRadius: 8,
     backgroundColor: '#fff',
   },
@@ -184,51 +192,59 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#ccc',
     borderRadius: 10,
-    backgroundColor: 'rgba(255, 255, 255, 0.6)', 
+    backgroundColor: '#E6F7FF',
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.2,
     shadowRadius: 1.5,
     elevation: 3,
-    height:100
+    height: 100,
   },
   fill: {
     flex: 1,
     marginRight: 10,
+  },
+  buttonContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   startButton: {
     backgroundColor: '#004AAD',
     padding: 18,
     borderRadius: 8,
     marginBottom: 20,
+    width: '80%',
+    alignItems: 'center',
   },
   stopButton: {
-    backgroundColor: '#F44336', 
+    backgroundColor: '#F44336',
     padding: 18,
     borderRadius: 8,
     marginBottom: 20,
+    width: '80%',
+    alignItems: 'center',
   },
   buttonText: {
     color: '#fff',
     fontSize: 18,
     textAlign: 'center',
+    fontWeight: 'bold',
   },
   recordingCount: {
     marginTop: 20,
     fontSize: 16,
-    color: '#333',
+    color: '#fff',
   },
   recordingIndicator: {
-    marginTop: 100,
-    padding: 100,
-    backgroundColor: '#004AAD', 
+    marginVertical: 10,
+    padding: 10,
+    backgroundColor: '#004AAD',
     borderRadius: 50,
-    width: 10,
-    height: 10,
+    width: '10%',
     alignItems: 'center',
     justifyContent: 'center',
-    borderWidth: 3,
-    borderColor: 'rgba(255, 255, 255, 0.5)',
+    borderWidth: 1,
+    borderColor: 'transparent',
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.3,
