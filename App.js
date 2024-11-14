@@ -1,7 +1,8 @@
-import React from 'react';
-import { StyleSheet, Text, View, Button, FlatList, Alert, TextInput, TouchableOpacity, StatusBar } from 'react-native';
+import React from 'react'; 
+import { Text, View, Button, FlatList, Alert, TextInput, TouchableOpacity, StatusBar } from 'react-native';
 import { Audio } from 'expo-av';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import styles from './styles';
 
 export default function App() {
   const [recording, setRecording] = React.useState();
@@ -79,14 +80,13 @@ export default function App() {
     const hrs = Math.floor(seconds / 3600);
     const mins = Math.floor((seconds % 3600) / 60);
     const secs = seconds % 60;
-  
+
     const hrsDisplay = hrs > 0 ? `${hrs}:` : "";
     const minsDisplay = `${hrs > 0 && mins < 10 ? '0' : ''}${mins}:`;
     const secsDisplay = `${secs < 10 ? '0' : ''}${secs}`;
-  
+
     return `${hrsDisplay}${minsDisplay}${secsDisplay}`;
   }
-  
 
   async function playRecording(sound) {
     await sound.replayAsync();
@@ -153,107 +153,3 @@ export default function App() {
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#F4F4F9',
-    alignItems: 'center',
-    justifyContent: 'flex-start',
-    padding: 20,
-    marginTop: 0,
-    height: '100%',
-  },
-  header: {
-    fontSize: 28,
-    fontWeight: 'bold',
-    color: '#004AAD',
-    marginBottom: 20,
-    marginTop: 40,
-    fontFamily: 'sans-serif',
-  },
-  searchInput: {
-    height: 45,
-    width: '100%',
-    borderColor: '#004AAD',
-    borderWidth: 1.5,
-    paddingHorizontal: 10,
-    marginBottom: 20,
-    borderRadius: 8,
-    backgroundColor: '#fff',
-  },
-  row: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    marginBottom: 15,
-    padding: 10,
-    width: '90%',
-    borderWidth: 1,
-    borderColor: '#ccc',
-    borderRadius: 10,
-    backgroundColor: '#E6F7FF',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.2,
-    shadowRadius: 1.5,
-    elevation: 3,
-    height: 100,
-  },
-  fill: {
-    flex: 1,
-    marginRight: 10,
-  },
-  buttonContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  startButton: {
-    backgroundColor: '#004AAD',
-    padding: 18,
-    borderRadius: 8,
-    marginBottom: 20,
-    width: '80%',
-    alignItems: 'center',
-  },
-  stopButton: {
-    backgroundColor: '#F44336',
-    padding: 18,
-    borderRadius: 8,
-    marginBottom: 20,
-    width: '80%',
-    alignItems: 'center',
-  },
-  buttonText: {
-    color: '#fff',
-    fontSize: 18,
-    textAlign: 'center',
-    fontWeight: 'bold',
-  },
-  recordingCount: {
-    marginTop: 20,
-    fontSize: 16,
-    color: '#fff',
-  },
-  recordingIndicator: {
-    marginVertical: 10,
-    padding: 10,
-    backgroundColor: '#004AAD',
-    borderRadius: 50,
-    width: '10%',
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderWidth: 1,
-    borderColor: 'transparent',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.3,
-    shadowRadius: 5,
-    elevation: 5,
-  },
-  recordingTime: {
-    color: '#fff',
-    fontSize: 20,
-    fontWeight: 'bold',
-  },
-});
