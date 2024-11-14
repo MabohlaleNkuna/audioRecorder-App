@@ -1,5 +1,5 @@
-import React from 'react'; 
-import { Text, View, Button, FlatList, Alert, TextInput, TouchableOpacity, StatusBar } from 'react-native';
+import React from 'react';
+import { Text, View, Button, FlatList, Alert, TextInput, TouchableOpacity, StatusBar, Modal } from 'react-native';
 import { Audio } from 'expo-av';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import styles from './styles';
@@ -9,6 +9,9 @@ export default function App() {
   const [recordings, setRecordings] = React.useState([]);
   const [searchTerm, setSearchTerm] = React.useState('');
   const [recordingTime, setRecordingTime] = React.useState(0);
+  const [renameModalVisible, setRenameModalVisible] = React.useState(false);
+  const [newName, setNewName] = React.useState('');
+  const [selectedRecordingIndex, setSelectedRecordingIndex] = React.useState(null);
 
   React.useEffect(() => {
     const loadRecordingsFromStorage = async () => {
@@ -70,6 +73,7 @@ export default function App() {
       duration: getDurationFormatted(status.durationMillis),
       file: fileUri,
       date: new Date().toLocaleString(),
+      name: `Recording ${allRecordings.length + 1}`,
     });
 
     setRecordings(allRecordings);
@@ -99,23 +103,42 @@ export default function App() {
     await AsyncStorage.setItem('recordings', JSON.stringify(updatedRecordings));
   }
 
+  function openRenameModal(index) {
+    setSelectedRecordingIndex(index);
+    setNewName(recordings[index].name || `Recording ${index + 1}`);
+    setRenameModalVisible(true);
+  }
+
+  async function renameRecording() {
+    const updatedRecordings = [...recordings];
+    updatedRecordings[selectedRecordingIndex].name = newName;
+
+    setRecordings(updatedRecordings);
+    setRenameModalVisible(false);
+    await AsyncStorage.setItem('recordings', JSON.stringify(updatedRecordings));
+  }
+
   function renderRecordingItem({ item, index }) {
     return (
       <View style={styles.row}>
-        <Text style={styles.fill}>
-          Recording #{String(index + 1).padStart(3, '0')} | {item.duration} | {item.date}
-        </Text>
-        <View style={styles.buttonContainer}>
-          <Button title="Play" onPress={() => playRecording(item.sound)} />
-          <View style={{ width: 3 }} />
-          <Button title="Delete" onPress={() => deleteRecording(index)} />
-        </View>
-      </View>
+  <Text style={styles.fill}>
+    {item.name} | {item.duration} | {item.date}
+  </Text>
+  <View style={styles.buttonContainer}>
+    <Button title="Play" onPress={() => playRecording(item.sound)} color="#4CAF50" />
+    <View style={styles.buttonSpacing} />
+    <Button title="Rename" onPress={() => openRenameModal(index)} color="#FF9800" />
+    <View style={styles.buttonSpacing} />
+    <Button title="Delete" onPress={() => deleteRecording(index)} color="#F44336" />
+  </View>
+</View>
+
     );
   }
 
-  const filteredRecordings = recordings.filter((recording, index) =>
-    String(index + 1).padStart(3, '0').includes(searchTerm) || recording.date.includes(searchTerm)
+  const filteredRecordings = recordings.filter((recording) =>
+    (recording.name && recording.name.includes(searchTerm)) || 
+    recording.date.includes(searchTerm)
   );
 
   return (
@@ -125,7 +148,7 @@ export default function App() {
 
       <TextInput
         style={styles.searchInput}
-        placeholder="Search recordings by number..."
+        placeholder="Search recordings..."
         onChangeText={setSearchTerm}
         value={searchTerm}
       />
@@ -138,9 +161,9 @@ export default function App() {
       </TouchableOpacity>
 
       {recording && (
-      <View style={styles.recordingIndicator}>
-        <Text style={styles.recordingTime}>{getDurationFormatted(recordingTime)}</Text>
-      </View>
+        <View style={styles.recordingIndicator}>
+          <Text style={styles.recordingTime}>{getDurationFormatted(recordingTime)}</Text>
+        </View>
       )}
 
       <Text style={styles.recordingCount}>Recording Count: {recordings.length}</Text>
@@ -150,6 +173,20 @@ export default function App() {
         renderItem={renderRecordingItem}
         keyExtractor={(item, index) => index.toString()}
       />
+
+      <Modal visible={renameModalVisible} animationType="slide" transparent={true}>
+        <View style={styles.modalContainer}>
+          <Text style={styles.modalTitle}>Rename Recording</Text>
+          <TextInput
+            style={styles.modalInput}
+            placeholder="New name"
+            value={newName}
+            onChangeText={setNewName}
+          />
+          <Button title="Save" onPress={renameRecording} />
+          <Button title="Cancel" onPress={() => setRenameModalVisible(false)} />
+        </View>
+      </Modal>
     </View>
   );
 }
