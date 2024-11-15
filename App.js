@@ -1,7 +1,8 @@
-import React from 'react';
-import { Text, View, Button, FlatList, Alert, TextInput, TouchableOpacity, StatusBar, Modal } from 'react-native';
+import React from 'react'; 
+import { Text, View, FlatList, Alert, TextInput, TouchableOpacity, StatusBar, Modal } from 'react-native';
 import { Audio } from 'expo-av';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { FontAwesome, MaterialIcons } from '@expo/vector-icons';
 import styles from './styles';
 
 export default function App() {
@@ -30,9 +31,7 @@ export default function App() {
   React.useEffect(() => {
     let timer;
     if (recording) {
-      timer = setInterval(() => {
-        setRecordingTime((prevTime) => prevTime + 1);
-      }, 1000);
+      timer = setInterval(() => setRecordingTime((prevTime) => prevTime + 1), 1000);
     } else {
       clearInterval(timer);
     }
@@ -62,11 +61,10 @@ export default function App() {
   async function stopRecording() {
     setRecording(undefined);
     setRecordingTime(0);
-
+  
     await recording.stopAndUnloadAsync();
     const { sound, status } = await recording.createNewLoadedSoundAsync();
     const fileUri = recording.getURI();
-
     let allRecordings = [...recordings];
     allRecordings.push({
       sound: sound,
@@ -80,16 +78,13 @@ export default function App() {
     await AsyncStorage.setItem('recordings', JSON.stringify(allRecordings));
   }
 
-  function getDurationFormatted(seconds) {
-    const hrs = Math.floor(seconds / 3600);
-    const mins = Math.floor((seconds % 3600) / 60);
-    const secs = seconds % 60;
+  function getDurationFormatted(milliseconds) {
+    const totalSeconds = Math.floor(milliseconds / 1000);
+    const hrs = Math.floor(totalSeconds / 3600);
+    const mins = Math.floor((totalSeconds % 3600) / 60);
+    const secs = totalSeconds % 60;
 
-    const hrsDisplay = hrs > 0 ? `${hrs}:` : "";
-    const minsDisplay = `${hrs > 0 && mins < 10 ? '0' : ''}${mins}:`;
-    const secsDisplay = `${secs < 10 ? '0' : ''}${secs}`;
-
-    return `${hrsDisplay}${minsDisplay}${secsDisplay}`;
+    return `${hrs > 0 ? `${hrs}:` : ''}${mins < 10 ? '0' : ''}${mins}:${secs < 10 ? '0' : ''}${secs}`;
   }
 
   async function playRecording(sound) {
@@ -121,18 +116,14 @@ export default function App() {
   function renderRecordingItem({ item, index }) {
     return (
       <View style={styles.row}>
-  <Text style={styles.fill}>
-    {item.name} | {item.duration} | {item.date}
-  </Text>
-  <View style={styles.buttonContainer}>
-    <Button title="Play" onPress={() => playRecording(item.sound)} color="#4CAF50" />
-    <View style={styles.buttonSpacing} />
-    <Button title="Rename" onPress={() => openRenameModal(index)} color="#FF9800" />
-    <View style={styles.buttonSpacing} />
-    <Button title="Delete" onPress={() => deleteRecording(index)} color="#F44336" />
-  </View>
-</View>
-
+        <Text style={styles.name}>{item.name}</Text>
+        <Text style={styles.details}>{item.duration} | {item.date}</Text>
+        <View style={styles.iconContainer}>
+          <FontAwesome name="play" size={24} color="#4CAF50" onPress={() => playRecording(item.sound)} />
+          <MaterialIcons name="edit" size={24} color="#FF9800" onPress={() => openRenameModal(index)} />
+          <MaterialIcons name="delete" size={24} color="#F44336" onPress={() => deleteRecording(index)} />
+        </View>
+      </View>
     );
   }
 
@@ -162,11 +153,9 @@ export default function App() {
 
       {recording && (
         <View style={styles.recordingIndicator}>
-          <Text style={styles.recordingTime}>{getDurationFormatted(recordingTime)}</Text>
+          <Text style={styles.recordingTime}>{getDurationFormatted(recordingTime * 1000)}</Text>
         </View>
       )}
-
-      <Text style={styles.recordingCount}>Recording Count: {recordings.length}</Text>
 
       <FlatList
         data={filteredRecordings}
@@ -183,8 +172,12 @@ export default function App() {
             value={newName}
             onChangeText={setNewName}
           />
-          <Button title="Save" onPress={renameRecording} />
-          <Button title="Cancel" onPress={() => setRenameModalVisible(false)} />
+          <TouchableOpacity onPress={renameRecording}>
+            <Text style={styles.buttonText}>Save</Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => setRenameModalVisible(false)}>
+            <Text style={styles.buttonText}>Cancel</Text>
+          </TouchableOpacity>
         </View>
       </Modal>
     </View>

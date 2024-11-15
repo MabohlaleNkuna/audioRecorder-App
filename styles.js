@@ -7,8 +7,6 @@ export default StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'flex-start',
     padding: 20,
-    marginTop: 0,
-    height: '100%',
   },
   header: {
     fontSize: 28,
@@ -16,7 +14,6 @@ export default StyleSheet.create({
     color: '#004AAD',
     marginBottom: 20,
     marginTop: 40,
-    fontFamily: 'sans-serif',
   },
   searchInput: {
     height: 45,
@@ -29,11 +26,10 @@ export default StyleSheet.create({
     backgroundColor: '#fff',
   },
   row: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
+    flexDirection: 'column',
+    alignItems: 'flex-start',
     marginBottom: 15,
-    padding: 10,
+    padding: 15,
     width: '90%',
     borderWidth: 1,
     borderColor: '#ccc',
@@ -44,56 +40,27 @@ export default StyleSheet.create({
     shadowOpacity: 0.2,
     shadowRadius: 1.5,
     elevation: 3,
-    minHeight: 100,
   },
-  fill: {
-    flex: 1,
-    marginRight: 10,
+  name: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#004AAD',
   },
-  buttonContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    width: '60%', 
+  details: {
+    fontSize: 12,
+    color: '#555',
     marginTop: 5,
   },
-
-  buttonSpacing: {
-    width: 5, 
-  },
-  button: {
-    backgroundColor: 'transparent',
-    borderWidth: 2,
-    borderColor: '#004AAD',
-    borderRadius: 8,
-    padding: 8,
-    marginBottom: 2,
+  iconContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginTop: 10,
     width: '80%',
-    alignItems: 'center',
-    justifyContent: 'center',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 5 },
-    shadowOpacity: 0.3,
-    shadowRadius: 5,
-    elevation: 5,
-    transition: 'all 0.3s ease',
   },
   buttonText: {
     color: '#004AAD',
     fontSize: 16,
     fontWeight: 'bold',
-  },
-  buttonHover: {
-    backgroundColor: '#004AAD',
-    shadowOffset: { width: 0, height: 0 },
-  },
-  recordingCount: {
-    marginTop: 20,
-    fontSize: 16,
-    color: '#004AAD',
-  },
-  recordingIndicator: {
-    alignItems: 'center',
-    marginBottom: 20,
   },
   recordingTime: {
     fontSize: 24,
@@ -115,11 +82,11 @@ export default StyleSheet.create({
   modalInput: {
     height: 45,
     width: '80%',
-    borderColor: '#004AAD',
     borderWidth: 1,
-    paddingHorizontal: 10,
+    borderColor: '#004AAD',
+    padding: 10,
     borderRadius: 8,
     backgroundColor: '#fff',
-    marginBottom: 10,
+    marginBottom: 20,
   },
 });
