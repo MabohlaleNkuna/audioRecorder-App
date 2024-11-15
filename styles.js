@@ -62,6 +62,22 @@ export default StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
   },
+  startButton: {
+    backgroundColor: '#4CAF50',
+    padding: 15,
+    width: '80%',
+    alignItems: 'center',
+    borderRadius: 10,
+    marginBottom: 10, // Added spacing
+  },
+  stopButton: {
+    backgroundColor: '#F44336',
+    padding: 15,
+    width: '80%',
+    alignItems: 'center',
+    borderRadius: 10,
+    marginBottom: 10, // Added spacing
+  },
   recordingTime: {
     fontSize: 24,
     color: '#F44336',

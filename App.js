@@ -135,7 +135,7 @@ export default function App() {
   return (
     <View style={styles.container}>
       <StatusBar barStyle="light-content" backgroundColor="#004AAD" />
-      <Text style={styles.header}>Recording App</Text>
+      <Text style={styles.header}>Mabohlale's Recording App</Text>
 
       <TextInput
         style={styles.searchInput}
