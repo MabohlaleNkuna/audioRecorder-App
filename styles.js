@@ -68,7 +68,7 @@ export default StyleSheet.create({
     width: '80%',
     alignItems: 'center',
     borderRadius: 10,
-    marginBottom: 10, // Added spacing
+    marginBottom: 10, 
   },
   stopButton: {
     backgroundColor: '#F44336',
@@ -76,7 +76,7 @@ export default StyleSheet.create({
     width: '80%',
     alignItems: 'center',
     borderRadius: 10,
-    marginBottom: 10, // Added spacing
+    marginBottom: 10, 
   },
   recordingTime: {
     fontSize: 24,
