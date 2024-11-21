@@ -1,4 +1,4 @@
-import React from 'react';
+import React from 'react'; 
 import { Text, View, FlatList, Alert, TextInput, TouchableOpacity, Modal } from 'react-native';
 import { Audio } from 'expo-av';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -18,9 +18,7 @@ export default function Homepage() {
     const loadRecordingsFromStorage = async () => {
       try {
         const savedRecordings = await AsyncStorage.getItem('recordings');
-        if (savedRecordings) {
-          setRecordings(JSON.parse(savedRecordings));
-        }
+        if (savedRecordings) setRecordings(JSON.parse(savedRecordings));
       } catch (err) {
         console.error('Error loading recordings', err);
       }
@@ -41,39 +39,33 @@ export default function Homepage() {
   const startRecording = async () => {
     try {
       const permission = await Audio.requestPermissionsAsync();
-      if (permission.status === "granted") {
-        await Audio.setAudioModeAsync({
-          allowsRecordingIOS: true,
-          playsInSilentModeIOS: true,
-        });
-
+      if (permission.status === 'granted') {
+        await Audio.setAudioModeAsync({ allowsRecordingIOS: true, playsInSilentModeIOS: true });
         const { recording } = await Audio.Recording.createAsync(Audio.RECORDING_OPTIONS_PRESET_HIGH_QUALITY);
         setRecording(recording);
         setRecordingTime(0);
       } else {
-        Alert.alert("Permission Denied", "You need to grant permission to access the microphone.");
+        Alert.alert('Permission Denied', 'You need to grant permission to access the microphone.');
       }
     } catch (err) {
-      console.error("Error starting recording", err);
+      console.error('Error starting recording', err);
     }
   };
 
   const stopRecording = async () => {
     setRecording(undefined);
     setRecordingTime(0);
-  
     await recording.stopAndUnloadAsync();
     const { sound, status } = await recording.createNewLoadedSoundAsync();
     const fileUri = recording.getURI();
-    let allRecordings = [...recordings];
+    const allRecordings = [...recordings];
     allRecordings.push({
-      sound: sound,
+      sound,
       duration: getDurationFormatted(status.durationMillis),
       file: fileUri,
       date: new Date().toLocaleString(),
       name: `Recording ${allRecordings.length + 1}`,
     });
-
     setRecordings(allRecordings);
     await AsyncStorage.setItem('recordings', JSON.stringify(allRecordings));
   };
@@ -83,7 +75,6 @@ export default function Homepage() {
     const hrs = Math.floor(totalSeconds / 3600);
     const mins = Math.floor((totalSeconds % 3600) / 60);
     const secs = totalSeconds % 60;
-
     return `${hrs > 0 ? `${hrs}:` : ''}${mins < 10 ? '0' : ''}${mins}:${secs < 10 ? '0' : ''}${secs}`;
   };
 
@@ -107,7 +98,6 @@ export default function Homepage() {
   const renameRecording = async () => {
     const updatedRecordings = [...recordings];
     updatedRecordings[selectedRecordingIndex].name = newName;
-
     setRecordings(updatedRecordings);
     setRenameModalVisible(false);
     await AsyncStorage.setItem('recordings', JSON.stringify(updatedRecordings));
@@ -126,57 +116,49 @@ export default function Homepage() {
   );
 
   const filteredRecordings = recordings.filter((recording) =>
-    (recording.name && recording.name.includes(searchTerm)) || 
-    recording.date.includes(searchTerm)
+    (recording.name && recording.name.includes(searchTerm)) || recording.date.includes(searchTerm)
   );
 
   return (
     <View style={styles.container}>
-      <Text style={styles.header}>Mabohlale's Recording App</Text>
-
-      <TextInput
-        style={styles.searchInput}
-        placeholder="Search recordings..."
-        onChangeText={setSearchTerm}
-        value={searchTerm}
-      />
-
-      <TouchableOpacity
-        style={recording ? styles.stopButton : styles.startButton}
-        onPress={recording ? stopRecording : startRecording}
-      >
-        <Text style={styles.buttonText}>{recording ? 'Stop Recording' : 'Start Recording'}</Text>
-      </TouchableOpacity>
-
-      {recording && (
-        <View style={styles.recordingIndicator}>
-          <Text style={styles.recordingTime}>{getDurationFormatted(recordingTime * 1000)}</Text>
-        </View>
-      )}
-
-      <FlatList
-        data={filteredRecordings}
-        renderItem={renderRecordingItem}
-        keyExtractor={(item, index) => index.toString()}
-      />
-
-      <Modal visible={renameModalVisible} animationType="slide" transparent={true}>
-        <View style={styles.modalContainer}>
-          <Text style={styles.modalTitle}>Rename Recording</Text>
-          <TextInput
-            style={styles.modalInput}
-            placeholder="New name"
-            value={newName}
-            onChangeText={setNewName}
-          />
-          <TouchableOpacity onPress={renameRecording}>
-            <Text style={styles.buttonText}>Save</Text>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={() => setRenameModalVisible(false)}>
-            <Text style={styles.buttonText}>Cancel</Text>
-          </TouchableOpacity>
-        </View>
-      </Modal>
+  <Text style={styles.header}>Mabohlale's Recording App</Text>
+  <TextInput
+    style={styles.searchInput}
+    placeholder="Search recordings..."
+    onChangeText={setSearchTerm}
+    value={searchTerm}
+  />
+  <TouchableOpacity
+    style={recording ? styles.stopButton : styles.startButton}
+    onPress={recording ? stopRecording : startRecording}
+  >
+    <Text style={styles.buttonText}>{recording ? 'Stop Recording' : 'Start Recording'}</Text>
+  </TouchableOpacity>
+  {recording && (
+    <View style={styles.recordingIndicator}>
+      <Text style={styles.recordingTime}>{getDurationFormatted(recordingTime * 1000)}</Text>
     </View>
+  )}
+  <View style={styles.listContainer}>
+    <FlatList
+      data={filteredRecordings}
+      renderItem={renderRecordingItem}
+      keyExtractor={(item, index) => index.toString()}
+      contentContainerStyle={{ paddingBottom: 20 }} // Ensure padding at the bottom
+    />
+  </View>
+  <Modal visible={renameModalVisible} animationType="slide" transparent>
+    <View style={styles.modalContainer}>
+      <Text style={styles.modalTitle}>Rename Recording</Text>
+      <TextInput style={styles.modalInput} placeholder="New name" value={newName} onChangeText={setNewName} />
+      <TouchableOpacity onPress={renameRecording}>
+        <Text style={styles.buttonText}>Save</Text>
+      </TouchableOpacity>
+      <TouchableOpacity onPress={() => setRenameModalVisible(false)}>
+        <Text style={styles.buttonText}>Cancel</Text>
+      </TouchableOpacity>
+    </View>
+  </Modal>
+</View>
   );
 }
