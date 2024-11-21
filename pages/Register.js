@@ -4,6 +4,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import styles from '../styles';
 
 export default function Register({ navigation }) {
+  const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -15,6 +16,7 @@ export default function Register({ navigation }) {
     }
 
     const userData = {
+      name,
       email,
       password,
     };
@@ -27,6 +29,12 @@ export default function Register({ navigation }) {
   return (
     <View style={styles.container}>
       <Text style={styles.header}>Register</Text>
+      <TextInput
+        style={styles.searchInput}
+        placeholder="Name"
+        value={name}
+        onChangeText={setName}
+      />
       <TextInput
         style={styles.searchInput}
         placeholder="Email"

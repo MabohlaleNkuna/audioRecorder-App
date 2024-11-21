@@ -113,4 +113,17 @@ export default StyleSheet.create({
     width: '80%',
     marginBottom: 20,
   },
+  profileButton: {
+    backgroundColor: '#004AAD',
+    padding: 10,
+    borderRadius: 5,
+    alignItems: 'center',
+    marginBottom: 20,
+  },
+  buttonText: {
+    color: '#FFF',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  
 });
