@@ -1,4 +1,4 @@
-import { StyleSheet } from 'react-native'; 
+import { StyleSheet } from 'react-native';
 
 export default StyleSheet.create({
   container: {
@@ -8,11 +8,17 @@ export default StyleSheet.create({
     justifyContent: 'flex-start',
     padding: 20,
   },
+  headerContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    width: '100%',
+    marginBottom: 20,
+  },
   header: {
     fontSize: 28,
     fontWeight: 'bold',
     color: '#004AAD',
-    marginBottom: 20,
     marginTop: 40,
   },
   searchInput: {
@@ -26,13 +32,13 @@ export default StyleSheet.create({
     backgroundColor: '#fff',
   },
   listContainer: {
-    flex: 1, 
-    width: '100%', 
+    flex: 1,
+    width: '100%',
   },
   row: {
-    flexDirection: 'column',  
+    flexDirection: 'column',
     justifyContent: 'flex-start',
-    alignItems: 'flex-start', 
+    alignItems: 'flex-start',
     marginBottom: 10,
     padding: 10,
     borderWidth: 1,
@@ -44,32 +50,18 @@ export default StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
     color: '#004AAD',
-    flex: 2,
-    marginRight: 8,
-    marginBottom: 4,  
+    marginBottom: 4,
   },
   details: {
     fontSize: 12,
     color: '#555',
-    flex: 3,
-    marginLeft: 10,
   },
   iconContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginTop: 8,  
-    marginLeft: 10,
-    marginBottom: 5,
-    justifyContent: 'space-between',  
-    width: '20%',  
-  },
-  icon: {
-    marginRight: 15,  
-  },
-  buttonText: {
-    color: '#004AAD',
-    fontSize: 16,
-    fontWeight: 'bold',
+    marginTop: 8,
+    justifyContent: 'space-between',
+    width: '50%',
   },
   startButton: {
     backgroundColor: '#4CAF50',
@@ -80,16 +72,16 @@ export default StyleSheet.create({
     marginBottom: 10,
   },
   stopButton: {
-    backgroundColor: '#F44336',
+    backgroundColor: '#FF5722',
     padding: 15,
     width: '80%',
     alignItems: 'center',
     borderRadius: 10,
     marginBottom: 10,
   },
-  recordingTime: {
-    fontSize: 24,
-    color: '#F44336',
+  buttonText: {
+    color: '#fff',
+    fontSize: 18,
     fontWeight: 'bold',
   },
   modalContainer: {
@@ -97,33 +89,44 @@ export default StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    padding: 20,
   },
   modalTitle: {
-    fontSize: 20,
+    fontSize: 22,
     fontWeight: 'bold',
-    color: '#fff',
-    marginBottom: 15,
+    color: '#004AAD',
+    marginBottom: 20,
   },
   modalInput: {
+    height: 50,
+    borderColor: '#004AAD',
+    borderWidth: 1.5,
+    borderRadius: 8,
+    backgroundColor: '#fff',
+    width: '80%',
+    paddingHorizontal: 10,
+    marginBottom: 20,
+  },
+  menu: {
+    position: 'absolute',
+    top: 60, 
+    right: 20, 
     backgroundColor: '#fff',
     borderRadius: 8,
-    borderWidth: 1,
-    borderColor: '#ccc',
-    paddingHorizontal: 10,
-    width: '80%',
-    marginBottom: 20,
-  },
-  profileButton: {
-    backgroundColor: '#004AAD',
     padding: 10,
-    borderRadius: 5,
-    alignItems: 'center',
-    marginBottom: 20,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5, 
+    zIndex: 10,
   },
-  buttonText: {
-    color: '#FFF',
+  menuItem: {
     fontSize: 16,
-    fontWeight: 'bold',
+    color: '#004AAD',
+    fontWeight: '500',
+    paddingVertical:6 ,
+    paddingHorizontal: 10,
   },
   
 });
