@@ -61,8 +61,9 @@ export default StyleSheet.create({
     alignItems: 'center',
     marginTop: 8,
     justifyContent: 'space-between',
-    width: '50%',
+    width: '70%', 
   },
+  
   startButton: {
     backgroundColor: '#4CAF50',
     padding: 15,

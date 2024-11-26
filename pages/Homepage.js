@@ -108,9 +108,12 @@ export default function Homepage({ navigation }) {
         <FontAwesome name="play" size={24} color="#4CAF50" onPress={() => playRecording(item.sound)} />
         <MaterialIcons name="edit" size={24} color="#FF9800" onPress={() => openRenameModal(index)} />
         <MaterialIcons name="delete" size={24} color="#F44336" onPress={() => deleteRecording(index)} />
+        {/* Backup icon added here */}
+        <FontAwesome name="cloud-upload" size={24} color="#2196F3" onPress={() => Alert.alert('Backup feature coming soon!')} />
       </View>
     </View>
   );
+  
 
   const filteredRecordings = recordings.filter((recording) =>
     (recording.name && recording.name.includes(searchTerm)) || recording.date.includes(searchTerm)
