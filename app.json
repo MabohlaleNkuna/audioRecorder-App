@@ -12,14 +12,15 @@
       "backgroundColor": "#ffffff"
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "deploymentTarget": "13.4"  
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.mabohlale.audioRecorderApp"
+      "package": "com.mabohlale.audioRecorderApp" 
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -28,6 +29,20 @@
       "eas": {
         "projectId": "53fe1260-7db4-49ed-8899-469d165b50f2"
       }
-    }
+    },
+    "plugins": [
+      [
+        "expo-build-properties",
+        {
+          "android": {
+            "compileSdkVersion": 34,
+            "targetSdkVersion": 34
+          },
+          "ios": {
+            "deploymentTarget": "15.1" 
+          }
+        }
+      ]
+    ]
   }
 }
